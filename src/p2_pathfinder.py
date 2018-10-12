@@ -44,7 +44,7 @@ def find_path (source_point, destination_point, mesh):
         y1 = box[0]
         y2 = box[1]
 
-        # Initialize all box values to None
+        # Initialize all box values to their adjacency list
         boxes[box] = mesh['adj'][box]
 
         # Check if equal to source or destination box and append to path, then print out.
