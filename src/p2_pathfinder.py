@@ -1,4 +1,6 @@
 from p1 import dijkstras_shortest_path, navigation_edges
+from math import inf, sqrt
+from heapq import heappop, heappush
 
 def find_path (source_point, destination_point, mesh):
 
@@ -16,9 +18,25 @@ def find_path (source_point, destination_point, mesh):
         A list of boxes explored by the algorithm
     """
 
-    path = []
-    boxes = {}
+    path = [] # path going from start to finish
+    boxes = {} # dict containing adj list with node as key
+    evaluated = [] # set of black nodes
+    queue = [(0,source_point)] # priority queue of nodes to look at
+    parent = {} # dict containing child nodes with parent as key
+    distances = {source_point: 0} # dict containing distance from start to key node
+    heuristic = {source_point: pythagorean(source_point[1]-destination_point[1], source_point[0]-destination_point[0])}
+    # dict containing distance from start node to key node + Euclidean distance from key node to end node
 
+    while len(queue) > 0:
+        currentNode = heappop(queue)
+
+        if currentNode == destination_point:
+            return path
+
+        evaluated.append(currentNode)
+        
+
+'''
     # Print source and destination coordinates
     print("Source coordinates: ", source_point, "\n")
     print("Destination coordinates: ", destination_point, "\n")
@@ -31,9 +49,9 @@ def find_path (source_point, destination_point, mesh):
     dx = destination_point[1]
     dy = destination_point[0]
 
-    """ Iterate through mesh boxes and put them in the dictionary: boxes.
-        Prints out the source and destination box if found.
-    """
+        # Iterate through mesh boxes and put them in the dictionary: boxes.
+        # Prints out the source and destination box if found.
+
         # Currently sets all box values in the dictionary to None
     for box in mesh['boxes']:
         # Box x Coordinates
@@ -59,3 +77,9 @@ def find_path (source_point, destination_point, mesh):
     #print(mesh)
 
     return path, boxes.keys()
+'''
+
+def pythagorean (a, b):
+    print(a)
+    print(b)
+    return sqrt((a*a)+(b*b))
