@@ -18,8 +18,9 @@ def find_path (source_point, destination_point, mesh):
         A list of boxes explored by the algorithm
     """
 
+    # Pseudocode found at: https://en.wikipedia.org/wiki/A*_search_algorithm (10/12/18)
+
     path = [] # path going from start to finish
-    boxes = {} # dict containing adj list with node as key
     evaluated = [] # set of black nodes
     queue = [(0,source_point)] # priority queue of nodes to look at
     parent = {} # dict containing child nodes with parent as key
@@ -28,15 +29,33 @@ def find_path (source_point, destination_point, mesh):
     # dict containing distance from start node to key node + Euclidean distance from key node to end node
 
     while len(queue) > 0:
-        currentNode = heappop(queue)
+        currentNode = heappop(queue) # take the node with least distance off the queue for examination
 
-        if currentNode == destination_point:
-            return path
+        if currentNode == destination_point: # if it's the node we're looking for, compute and return the path
+            return form_path(parent, currentNode)
 
-        evaluated.append(currentNode)
-        
+        evaluated.append(currentNode) # add the current node to the list of black nodes
 
-'''
+        for adjacentNode in mesh['adj'][currentNode]: # looks at each node in adjacency list of current node
+            
+            if adjacentNode in evaluated: # if the node is black, ignore it
+                continue
+
+            else: # otherwise, try to calculate a better heuristic
+                tempHeuristic = heuristic[currentNode] + pythagorean((currentNode[1]-adjacentNode[1]), (currentNode[0]-adjacentNode[0]))
+
+                if not adjacentNode in queue: # node has been discovered
+                    heappush(queue, adjacentNode)
+
+                elif adjacentNode in heuristic.keys() and tempHeuristic >= heuristic[adjacentNode]: # the heuristic is not better
+                    continue
+
+            # record best path
+            parent[adjacentNode] = currentNode
+            heuristic[adjacentNode] = tempHeuristic
+            distances[adjacentNode] = heuristic[adjacentNode] + pythagorean((adjacentNode[1]-destination_point[1]), (adjacentNode[0]-destination_point[0]))
+
+"""
     # Print source and destination coordinates
     print("Source coordinates: ", source_point, "\n")
     print("Destination coordinates: ", destination_point, "\n")
@@ -77,9 +96,16 @@ def find_path (source_point, destination_point, mesh):
     #print(mesh)
 
     return path, boxes.keys()
-'''
+"""
 
+# uses Pythagorean Theorem to calculate straght-line dist between two Cartesian coordinates
 def pythagorean (a, b):
-    print(a)
-    print(b)
     return sqrt((a*a)+(b*b))
+
+# reconstructs path
+def form_path(parent, currentNode):
+    path = [currentNode]
+    while currentNode in parent.keys():
+        currentNode = parent[currentNode]
+        path.append(currentNode)
+    return path
