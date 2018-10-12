@@ -18,9 +18,11 @@ def find_path (source_point, destination_point, mesh):
         A list of boxes explored by the algorithm
     """
 
+    print(mesh['adj'])
+    print(source_point)
+
     # Pseudocode found at: https://en.wikipedia.org/wiki/A*_search_algorithm (10/12/18)
 
-    path = [] # path going from start to finish
     evaluated = [] # set of black nodes
     queue = [(0,source_point)] # priority queue of nodes to look at
     parent = {} # dict containing child nodes with parent as key
