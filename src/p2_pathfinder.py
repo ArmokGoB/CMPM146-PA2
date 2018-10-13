@@ -84,6 +84,7 @@ def dijkstras_shortest_path(initial_position, destination, mesh):
     while queue:
         print("queue: ", queue)
         current_dist, current_point = heappop(queue)
+        current_dist = distances[current_point]
         #print(current_point)
         #print(current_dist)
         current_node = find_box(current_point, mesh['boxes'], current_box)
